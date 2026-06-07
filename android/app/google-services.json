@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "712567778818",
+    "firebase_url": "https://newprojectniva-default-rtdb.firebaseio.com",
+    "project_id": "newprojectniva",
+    "storage_bucket": "newprojectniva.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712567778818:android:1225e6a6c6527e708d411b",
+        "android_client_info": {
+          "package_name": "bebo.studios2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPEHEImi4OwLEWjlsvRTbSoxolbGpP5dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:712567778818:android:c24fd223f4dd1f308d411b",
+        "android_client_info": {
+          "package_name": "ritu.raj7"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPEHEImi4OwLEWjlsvRTbSoxolbGpP5dY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
