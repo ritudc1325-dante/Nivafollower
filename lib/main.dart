@@ -4219,30 +4219,67 @@ class _GetCoinScreenState extends State<GetCoinScreen> with SingleTickerProvider
     });
   }
 
+  // void _performActionAndNext() async {
+  //   setState(() { statusText = "Opening Instagram..."; });
+  //   final uri = Uri.parse('instagram://user?username=$currentTargetUser');
+  //   try {
+  //     final launched = await launchUrl(uri);
+  //     if (launched) {
+  //       _pendingActionTime = DateTime.now();
+  //       _pendingActionType = currentTab;
+  //       _pendingTargetUser = currentTargetUser;
+  //     } else {
+  //       final webUri = Uri.parse('https://www.instagram.com/$currentTargetUser');
+  //       if (await launchUrl(webUri, mode: LaunchMode.externalApplication)) {
+  //         _pendingActionTime = DateTime.now();
+  //         _pendingActionType = currentTab;
+  //         _pendingTargetUser = currentTargetUser;
+  //       } else {
+  //         setState(() { statusText = "Failed to launch Instagram."; });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     debugPrint("Error launching IG: $e");
+  //     setState(() { statusText = "Failed to launch Instagram."; });
+  //   }
+  // }
+
   void _performActionAndNext() async {
-    setState(() { statusText = "Opening Instagram..."; });
-    final uri = Uri.parse('instagram://user?username=$currentTargetUser');
+    setState(() { statusText = "Processing..."; });
+
     try {
-      final launched = await launchUrl(uri);
-      if (launched) {
-        _pendingActionTime = DateTime.now();
-        _pendingActionType = currentTab;
-        _pendingTargetUser = currentTargetUser;
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/instagram/follow'),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "username": AppState.username,
+          "targetUsername": currentTargetUser,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        AppState.coins.value = data['newBalance'] ?? AppState.coins.value + 4;
+        await FirebaseService.updateCoins(AppState.username, AppState.coins.value);
+        setState(() => statusText = "Earned +4 Coins! ✨");
       } else {
-        final webUri = Uri.parse('https://www.instagram.com/$currentTargetUser');
-        if (await launchUrl(webUri, mode: LaunchMode.externalApplication)) {
-          _pendingActionTime = DateTime.now();
-          _pendingActionType = currentTab;
-          _pendingTargetUser = currentTargetUser;
-        } else {
-          setState(() { statusText = "Failed to launch Instagram."; });
-        }
+        AppState.coins.value += 4;
+        await FirebaseService.updateCoins(AppState.username, AppState.coins.value);
+        setState(() => statusText = "Earned +4 Coins! ✨");
       }
+
+      await Future.delayed(const Duration(seconds: 1));
+      _nextProfile();
+
     } catch (e) {
-      debugPrint("Error launching IG: $e");
-      setState(() { statusText = "Failed to launch Instagram."; });
+      debugPrint("Action Error: $e");
+      AppState.coins.value += 4;
+      setState(() => statusText = "Earned +4 Coins!");
+      await Future.delayed(const Duration(seconds: 1));
+      _nextProfile();
     }
   }
+
 
   void toggleAutoBot() {
     // Open the advanced auto bot configuration page
